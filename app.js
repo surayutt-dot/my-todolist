@@ -18,7 +18,7 @@ const ICONS = {
 };
 
 // INITIALIZATION
-document.addEventListener('DOMContentLoaded', () => {
+function init() {
     initDate();
     initTheme();
     loadData();
@@ -27,7 +27,13 @@ document.addEventListener('DOMContentLoaded', () => {
     updateStats();
     setupEventListeners();
     registerServiceWorker();
-});
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+} else {
+    init();
+}
 
 // DATE DISPLAY
 function initDate() {
