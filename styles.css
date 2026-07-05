@@ -146,6 +146,48 @@ header {
     height: 20px;
 }
 
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.avatar-wrapper {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border-color);
+    background-color: var(--bg-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+}
+
+.avatar-wrapper:active {
+    transform: scale(0.92);
+}
+
+.avatar-image {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: var(--text-secondary);
+}
+
+.avatar-image svg {
+    width: 20px;
+    height: 20px;
+}
+
 /* SCROLLABLE MAIN CONTENT */
 .scrollable-content {
     flex: 1;

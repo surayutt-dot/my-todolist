@@ -21,6 +21,7 @@ const ICONS = {
 function init() {
     initDate();
     initTheme();
+    initAvatar();
     loadData();
     renderCategories();
     renderTasks();
@@ -802,5 +803,51 @@ function registerServiceWorker() {
                 .then(reg => console.log('ServiceWorker registration successful with scope: ', reg.scope))
                 .catch(err => console.log('ServiceWorker registration failed: ', err));
         });
+    }
+}
+
+// PROFILE AVATAR MANAGEMENT
+function initAvatar() {
+    const avatarBtn = document.getElementById('avatar-btn');
+    const avatarInput = document.getElementById('avatar-input');
+    
+    if (!avatarBtn || !avatarInput) return;
+    
+    // Load saved avatar on startup
+    loadAvatar();
+    
+    // Click avatar to trigger file input
+    avatarBtn.addEventListener('click', () => {
+        avatarInput.click();
+    });
+    
+    // Handle image file selection
+    avatarInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            // Check file size (limit to 2MB to fit in LocalStorage)
+            if (file.size > 2 * 1024 * 1024) {
+                alert('ขนาดรูปภาพใหญ่เกินไป (กรุณาเลือกรูปขนาดไม่เกิน 2MB)');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function() {
+                localStorage.setItem('profile_avatar', reader.result);
+                loadAvatar();
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+}
+
+function loadAvatar() {
+    const avatarImage = document.getElementById('avatar-image');
+    const savedAvatar = localStorage.getItem('profile_avatar');
+    
+    if (avatarImage && savedAvatar) {
+        avatarImage.style.backgroundImage = `url(${savedAvatar})`;
+        // Clear default SVG icon
+        avatarImage.innerHTML = '';
     }
 }
