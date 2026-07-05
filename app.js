@@ -34,17 +34,15 @@ if (document.readyState === 'loading') {
 } else {
     init();
 }
-
 // DATE DISPLAY
 function initDate() {
     const dateEl = document.getElementById('current-date');
     if (!dateEl) return;
     
-    const options = { weekday: 'long', day: 'numeric', month: 'long', year: '543' }; // Thai Buddhist Era year
+    const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
     const today = new Date();
-    // Thai local format
+    // Thai local format (automatically CE + 543)
     let dateStr = today.toLocaleDateString('th-TH', options);
-    // Capitalize first letter if any, or tidy
     dateEl.textContent = dateStr;
 }
 
