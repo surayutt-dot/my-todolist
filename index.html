@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>TaskFlow - Premium Todo List</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0f172a">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app-container">
+        <!-- Status Bar Spacer (for iOS notch) -->
+        <div class="status-bar-spacer"></div>
+
+        <!-- Header -->
+        <header>
+            <div class="header-left">
+                <span class="current-date" id="current-date">วันอาทิตย์ที่ 5 กรกฎาคม</span>
+                <h1 class="app-title">สวัสดีครับ 👋</h1>
+            </div>
+            <div class="header-right">
+                <button id="theme-toggle" class="icon-btn" aria-label="Toggle Theme">
+                    <!-- Light Mode Icon (Sun) -->
+                    <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="4"></circle>
+                        <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
+                    </svg>
+                    <!-- Dark Mode Icon (Moon) -->
+                    <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                        <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Scrollable Area -->
+        <main class="scrollable-content">
+            <!-- Stats Dashboard Card -->
+            <section class="dashboard-card">
+                <div class="dashboard-info">
+                    <h2 class="dashboard-title">ความคืบหน้าวันนี้</h2>
+                    <p class="dashboard-subtitle" id="dashboard-stats-text">กำลังโหลดข้อมูล...</p>
+                    <div class="dashboard-counters">
+                        <div class="counter-item">
+                            <span class="counter-num" id="tasks-todo-count">0</span>
+                            <span class="counter-label">รอทำ</span>
+                        </div>
+                        <div class="counter-divider"></div>
+                        <div class="counter-item">
+                            <span class="counter-num" id="tasks-done-count">0</span>
+                            <span class="counter-label">เสร็จแล้ว</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="dashboard-visual">
+                    <svg class="progress-ring" width="80" height="80">
+                        <circle class="progress-ring-circle-bg" stroke="rgba(255,255,255,0.15)" stroke-width="8" fill="transparent" r="32" cx="40" cy="40"/>
+                        <circle class="progress-ring-circle" id="progress-ring-circle" stroke="white" stroke-width="8" stroke-dasharray="201.06" stroke-dashoffset="201.06" stroke-linecap="round" fill="transparent" r="32" cx="40" cy="40"/>
+                    </svg>
+                    <span class="progress-percent" id="progress-percent-text">0%</span>
+                </div>
+            </section>
+
+            <!-- Categories Section -->
+            <section class="categories-section">
+                <div class="section-header">
+                    <h3 class="section-title">หมวดหมู่</h3>
+                    <button class="text-link-btn" id="add-category-btn">+ เพิ่ม</button>
+                </div>
+                <div class="categories-list-wrapper">
+                    <div class="categories-list" id="categories-list">
+                        <!-- Categories will be injected here dynamically by app.js -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Filter & Search Section -->
+            <section class="filter-section">
+                <div class="search-bar">
+                    <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.3-4.3"></path>
+                    </svg>
+                    <input type="text" id="search-input" placeholder="ค้นหางานของคุณ...">
+                </div>
+                
+                <div class="filter-tabs-wrapper">
+                    <div class="filter-tabs">
+                        <button class="filter-tab active" data-filter="all">ทั้งหมด</button>
+                        <button class="filter-tab" data-filter="active">รอทำ</button>
+                        <button class="filter-tab" data-filter="completed">เสร็จแล้ว</button>
+                        <button class="filter-tab" data-filter="high">ด่วนมาก 🚨</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tasks List Section -->
+            <section class="tasks-section">
+                <div class="section-header">
+                    <h3 class="section-title" id="tasks-list-title">รายการงานทั้งหมด</h3>
+                    <span class="tasks-count-badge" id="visible-tasks-count">0</span>
+                </div>
+                
+                <!-- Empty State -->
+                <div class="empty-state" id="empty-state" style="display: none;">
+                    <div class="empty-illustration">
+                        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="100" cy="100" r="80" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="6,6" opacity="0.3"></circle>
+                            <path d="M70,95 L90,115 L130,75" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.5"></path>
+                        </svg>
+                    </div>
+                    <h4>ไม่มีงานในรายการนี้</h4>
+                    <p>แตะปุ่มด้านล่างเพื่อเพิ่มงานใหม่</p>
+                </div>
+
+                <div class="tasks-list" id="tasks-list">
+                    <!-- Tasks will be injected here dynamically by app.js -->
+                </div>
+            </section>
+        </main>
+
+        <!-- Floating Action Button (FAB) -->
+        <button class="fab-btn" id="fab-btn" aria-label="Add Task">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14M12 5v14"></path>
+            </svg>
+        </button>
+
+        <!-- BOTTOM SHEET: ADD TASK MODAL -->
+        <div class="modal-overlay" id="add-task-modal" style="display: none;">
+            <div class="bottom-sheet">
+                <div class="sheet-drag-handle"></div>
+                <div class="sheet-header">
+                    <h3>สร้างงานใหม่</h3>
+                    <button class="close-sheet-btn" id="close-add-modal-btn">ยกเลิก</button>
+                </div>
+                <div class="sheet-body">
+                    <form id="add-task-form" onsubmit="event.preventDefault();">
+                        <!-- Task Name -->
+                        <div class="form-group">
+                            <label for="task-input">ชื่องาน *</label>
+                            <input type="text" id="task-input" placeholder="ทำอะไรดีวันนี้..." required autocomplete="off">
+                        </div>
+
+                        <!-- Category Selection -->
+                        <div class="form-group">
+                            <label>หมวดหมู่</label>
+                            <div class="category-selector-pills" id="modal-category-select">
+                                <!-- Categories injected dynamically -->
+                            </div>
+                        </div>
+
+                        <!-- Priority Selector -->
+                        <div class="form-group">
+                            <label>ความสำคัญ</label>
+                            <div class="priority-segmented-control">
+                                <label class="priority-option">
+                                    <input type="radio" name="priority" value="low">
+                                    <span class="priority-pill low">ปกติ</span>
+                                </label>
+                                <label class="priority-option">
+                                    <input type="radio" name="priority" value="medium" checked>
+                                    <span class="priority-pill medium">ปานกลาง</span>
+                                </label>
+                                <label class="priority-option">
+                                    <input type="radio" name="priority" value="high">
+                                    <span class="priority-pill high">ด่วนที่สุด 🚨</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Due Date -->
+                        <div class="form-group">
+                            <label for="task-due-date">กำหนดส่ง</label>
+                            <input type="date" id="task-due-date">
+                        </div>
+
+                        <!-- Subtasks Creator -->
+                        <div class="form-group">
+                            <label>งานย่อย (Subtasks)</label>
+                            <div class="subtasks-input-container">
+                                <input type="text" id="new-subtask-input" placeholder="เพิ่มขั้นตอนย่อย...">
+                                <button type="button" class="add-subtask-btn" id="add-subtask-btn">เพิ่ม</button>
+                            </div>
+                            <ul class="subtasks-list-preview" id="subtasks-list-preview">
+                                <!-- Subtask items will be listed here -->
+                            </ul>
+                        </div>
+
+                        <!-- Action Submit Button -->
+                        <button type="submit" class="submit-btn" id="save-task-btn">บันทึกงาน</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- BOTTOM SHEET: DETAIL & EDIT TASK MODAL -->
+        <div class="modal-overlay" id="task-detail-modal" style="display: none;">
+            <div class="bottom-sheet">
+                <div class="sheet-drag-handle"></div>
+                <div class="sheet-header">
+                    <h3>รายละเอียดงาน</h3>
+                    <button class="close-sheet-btn" id="close-detail-modal-btn">ปิด</button>
+                </div>
+                <div class="sheet-body" id="detail-modal-body">
+                    <!-- Dynamic content will be injected here:
+                         - Category badge & Priority
+                         - Task Title
+                         - Due Date status
+                         - Subtasks list with interactive checkboxes
+                         - Action buttons (Delete task, Mark as complete)
+                    -->
+                </div>
+            </div>
+        </div>
+
+        <!-- DIALOG MODAL: ADD CATEGORY -->
+        <div class="dialog-overlay" id="add-category-modal" style="display: none;">
+            <div class="dialog-card">
+                <h3>เพิ่มหมวดหมู่ใหม่</h3>
+                <div class="form-group">
+                    <label for="new-category-name">ชื่อหมวดหมู่</label>
+                    <input type="text" id="new-category-name" placeholder="เช่น การเงิน, กิจวัตร..." required autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label>โทนสีหมวดหมู่</label>
+                    <div class="color-picker-grid">
+                        <label class="color-option" style="background-color: #3b82f6;"><input type="radio" name="cat-color" value="#3b82f6" checked></label>
+                        <label class="color-option" style="background-color: #10b981;"><input type="radio" name="cat-color" value="#10b981"></label>
+                        <label class="color-option" style="background-color: #8b5cf6;"><input type="radio" name="cat-color" value="#8b5cf6"></label>
+                        <label class="color-option" style="background-color: #f59e0b;"><input type="radio" name="cat-color" value="#f59e0b"></label>
+                        <label class="color-option" style="background-color: #ec4899;"><input type="radio" name="cat-color" value="#ec4899"></label>
+                        <label class="color-option" style="background-color: #06b6d4;"><input type="radio" name="cat-color" value="#06b6d4"></label>
+                    </div>
+                </div>
+                <div class="dialog-actions">
+                    <button class="dialog-btn secondary" id="cancel-category-btn">ยกเลิก</button>
+                    <button class="dialog-btn primary" id="save-category-btn">สร้าง</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="app.js"></script>
+</body>
+</html>
