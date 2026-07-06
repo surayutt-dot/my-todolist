@@ -351,8 +351,6 @@ function renderTasks() {
                 <div class="task-content" onclick="openDetailModal('${task.id}')">
                     <h4 class="task-title">${escapeHTML(task.text)}</h4>
                     <div class="task-meta">
-                        <span class="task-tag" style="background-color: ${hexToRgba(catColor, 0.08)}; color: ${catColor};">${escapeHTML(catName)}</span>
-                        
                         ${hasSubtasks ? `
                             <span class="subtasks-badge">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="m9 11-4 4 4 4m6-14 4 4-4 4"></path><path d="M5 15h11a4 4 0 0 0 4-4V5"></path></svg>
@@ -505,6 +503,14 @@ function setupEventListeners() {
     closeAddModalBtn.addEventListener('click', () => {
         closeModal(addTaskModal);
     });
+    
+    // Close detail modal
+    const closeDetailModalBtn = document.getElementById('close-detail-modal-btn');
+    if (closeDetailModalBtn) {
+        closeDetailModalBtn.addEventListener('click', () => {
+            closeModal(document.getElementById('task-detail-modal'));
+        });
+    }
     
     // Save new task
     addTaskForm.addEventListener('submit', (e) => {
@@ -689,9 +695,6 @@ function renderDetailModalBody(task) {
     
     container.innerHTML = `
         <div class="detail-meta-row">
-            <span class="task-tag" style="background-color: ${hexToRgba(catColor, 0.08)}; color: ${catColor}; font-size: 0.75rem; padding: 4px 8px;">
-                ${escapeHTML(catName)}
-            </span>
             <span class="priority-pill ${priClass}" style="font-size: 0.75rem; padding: 4px 8px; border-radius: 6px;">
                 ความสำคัญ: ${priLabel}
             </span>

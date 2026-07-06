@@ -1256,3 +1256,89 @@ header {
 .dialog-btn.secondary:active {
     background-color: var(--border-color);
 }
+
+/* MOBILE ACCESSIBILITY: LARGER FONTS & DESIGN ON MOBILE SCREENS */
+@media (max-width: 480px) {
+    .app-title {
+        font-size: 1.85rem !important;
+    }
+    
+    .current-date {
+        font-size: 0.95rem !important;
+    }
+    
+    .dashboard-title {
+        font-size: 1.2rem !important;
+    }
+    
+    .dashboard-subtitle {
+        font-size: 0.95rem !important;
+    }
+    
+    .counter-num {
+        font-size: 1.5rem !important;
+    }
+    
+    .counter-label {
+        font-size: 0.9rem !important;
+    }
+    
+    .section-title {
+        font-size: 1.25rem !important;
+    }
+    
+    .task-title {
+        font-size: 1.15rem !important;
+        line-height: 1.4 !important;
+    }
+    
+    .task-meta span {
+        font-size: 0.85rem !important;
+    }
+    
+    .filter-tab {
+        font-size: 0.95rem !important;
+        padding: 8px 16px !important;
+    }
+    
+    #search-input {
+        font-size: 1.05rem !important;
+    }
+    
+    .detail-title {
+        font-size: 1.4rem !important;
+        line-height: 1.4 !important;
+    }
+    
+    .subtask-text {
+        font-size: 1.05rem !important;
+    }
+    
+    .detail-action-btn {
+        font-size: 0.95rem !important;
+        padding: 12px !important;
+    }
+    
+    .bottom-sheet h3 {
+        font-size: 1.25rem !important;
+    }
+    
+    .close-sheet-btn {
+        font-size: 0.95rem !important;
+    }
+    
+    .form-group label {
+        font-size: 1.0rem !important;
+    }
+    
+    .form-group input[type="text"],
+    .form-group input[type="date"] {
+        font-size: 1.1rem !important;
+        padding: 12px 14px !important;
+    }
+    
+    .submit-btn {
+        font-size: 1.1rem !important;
+        padding: 14px !important;
+    }
+}
